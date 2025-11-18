@@ -160,7 +160,7 @@ class StockDataVisualizer:
         if data and "Error Message" not in data and "Note" not in data:
             filtered_data = self.filter_data_by_date(data, start_date, end_date, time_series)
             if filtered_data:
-                self.make_chart(symbol, filtered_data, chart_type, start_date, end_date)
+                self.generate_chart(symbol, filtered_data, chart_type, start_date, end_date)
             else:
                 print("No data found for the specified date range.")
         else:
