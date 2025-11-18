@@ -1,6 +1,7 @@
 import requests
 import pygal
 from lxml import etree
+from datetime import datetime
 
 class StockDataVisualizer:
 
@@ -46,3 +47,20 @@ class StockDataVisualizer:
             return "TIME_SERIES_MONTHLY"
         else:
             return "TIME_SERIES_DAILY"
+        
+    def get_date_range(self):
+        while True:
+            start_date = input("Enter beginning date (YYYY-MM-DD): ").strip()
+            end_date = input("Enter end date (YYYY-MM-DD): ").strip()
+            
+            try:
+                start = datetime.strptime(start_date, "%Y-%m-%d")
+                end = datetime.strptime(end_date, "%Y-%m-%d")
+                
+                if end < start:
+                    print("Error: End date cannot be before start date. Please try again.\n")
+                    continue
+                    
+                return start_date, end_date
+            except ValueError:
+                print("Error: Invalid date format. Please use YYYY-MM-DD format.\n")
