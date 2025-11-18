@@ -64,3 +64,45 @@ class StockDataVisualizer:
                 return start_date, end_date
             except ValueError:
                 print("Error: Invalid date format. Please use YYYY-MM-DD format.\n")
+    
+    def get_stock_data(self, symbol, function):
+        params = {
+            "function": function,
+            "symbol": symbol,
+            "apikey": self.api_key,
+            "outputsize": "full"
+        }
+        
+        if function == "TIME_SERIES_INTRADAY":
+            params["interval"] = "60min"
+        
+        try:
+            response = requests.get(self.base_url, params=params, timeout=10)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"Error fetching data: {e}")
+            return None
+    
+    def filter_data_by_date(self, data, start_date, end_date, function):
+        
+        if function == "TIME_SERIES_INTRADAY":
+            key = "Time Series (60min)"
+        elif function == "TIME_SERIES_DAILY":
+            key = "Time Series (Daily)"
+        elif function == "TIME_SERIES_WEEKLY":
+            key = "Weekly Time Series"
+        elif function == "TIME_SERIES_MONTHLY":
+            key = "Monthly Time Series"
+        else:
+            key = None
+        
+        if not key or key not in data:
+            print("Error: Unable to find time series data")
+            return None
+        
+        time_series = data[key]
+        
+        return {date_str: values 
+                for date_str, values in time_series.items() 
+                if start_date <= date_str.split()[0] <= end_date}
